@@ -10,17 +10,12 @@ class MissionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        mission = Mission.objects.create(**validated_data)
         driver = validated_data.pop("driver")
-        driver.is_doing_the_mission = True
-        driver.save()
-
-        return mission
-
-    def validate(self, data):
-        data_dict = dict(data)
-        driver = data_dict.get("driver")
-        if driver.is_doing_the_mission == True:
+        if driver.is_doing_the_mission != True:
+            mission = Mission.objects.create(**validated_data, driver=driver)
+            driver.is_doing_the_mission = True
+            driver.save()
+        else:
             raise serializers.ValidationError(
                 {
                     "driver": [
@@ -28,4 +23,4 @@ class MissionSerializer(serializers.ModelSerializer):
                     ]
                 }
             )
-        return data
+        return mission
