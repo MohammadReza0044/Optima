@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.viewsets import ModelViewSet
 
 from user.models import User
