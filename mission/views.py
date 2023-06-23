@@ -11,9 +11,9 @@ class MissionViewSet(ModelViewSet):
     queryset = Mission.objects.all()
     serializer_class = MissionSerializer
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     if self.request.user.is_driver:
-    #         return Mission.objects.filter(driver=user)
-    #     else:
-    #         return Mission.objects.all()
+    def get_queryset(self):
+        user = self.request.user
+        if self.request.user.is_admin:
+            return Mission.objects.all()
+        else:
+            return Mission.objects.filter(driver=user)
